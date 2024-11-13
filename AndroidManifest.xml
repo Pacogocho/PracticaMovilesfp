@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -12,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FPJLGK"
         tools:targetApi="31" >
-        <!--Ruta original
+        <!--Ruta original-->
 
         <activity android:name=".Act1" android:exported="true">
             <intent-filter>
@@ -21,15 +22,20 @@
             </intent-filter>
         </activity>
         <activity android:name=".ActAccesoInternet1"/>
-        -->
-        <!--Ruta De Pruebas  -->
+        <activity android:name=".ActCamara1"/>
+        <activity android:name=".ActGaleria1"/>
+        <activity android:name=".ActSensores1"/>
 
-        <activity android:name=".ActAccesoInternet1" android:exported="true">
+        <!--Ruta De Pruebas  // Cambiar de pantalla para probarla directamente//
+        sustituir "actividadAPRobar" por la pantalla que deseas probar
+
+
+        <activity android:name=".actividadAPRobar" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity>  -->
 
     </application>
 
