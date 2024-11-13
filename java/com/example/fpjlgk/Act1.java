@@ -21,6 +21,9 @@ public class Act1 extends AppCompatActivity {
         setContentView(R.layout.pantallaprincipal1);
         TextView textoInicial = findViewById(R.id.textoInicioPPal1);
         Button botonAccesoInternet = findViewById(R.id.ConexionAInternet);
+        Button botonCamara = findViewById(R.id.Camara);
+        Button botonGaleria = findViewById(R.id.Galeria);
+        Button botonSensores = findViewById(R.id.Sensores);
 
         // ------Numero de accesos------------------------------------------------------------------
         // Obtenemos las preferencias compartidas
@@ -54,6 +57,28 @@ public class Act1 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Act1.this, ActAccesoInternet1.class);
+                startActivity(intent); // Inicia la nueva actividad
+            }
+        });
+        // ------Boton Camara------------------------------------------------------------
+        botonCamara.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Act1.this, ActCamara1.class);
+                startActivity(intent); // Inicia la nueva actividad
+            }
+        });// ------Boton Galeria------------------------------------------------------------
+        botonGaleria.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Act1.this, ActGaleria1.class);
+                startActivity(intent); // Inicia la nueva actividad
+            }
+        });// ------Boton Sensores------------------------------------------------------------
+        botonSensores.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Act1.this, ActSensores1.class);
                 startActivity(intent); // Inicia la nueva actividad
             }
         });
