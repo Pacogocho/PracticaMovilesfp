@@ -1,5 +1,9 @@
 package com.example.fpjlgk;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -46,6 +50,29 @@ public class ActAccesoInternet1 extends AppCompatActivity {
                 }
             }
         });
+
+
+        View layout = findViewById(R.id.layoutaccinternet);
+
+        // Crea un ObjectAnimator para animar el color de fondo
+        ObjectAnimator colorAnimator = ObjectAnimator.ofObject(
+                layout,                                // La vista a animar
+                "backgroundColor",                     // La propiedad a cambiar
+                new ArgbEvaluator(),                   // Interpolador para colores
+                //Color.RED,                             // Color inicial
+                Color.CYAN ,                            // Color intermedio
+                //Color.GREEN,                           // Color final
+                //Color.MAGENTA
+                Color.parseColor("#e9f542")
+        );
+
+        // Configura la duración y el comportamiento de la animación
+        colorAnimator.setDuration(20000);           // Duración de x segundos
+        colorAnimator.setRepeatCount(ValueAnimator.INFINITE); // Animación infinita
+        colorAnimator.setRepeatMode(ValueAnimator.REVERSE);   // Reversa al terminar
+
+        // Inicia la animación
+        colorAnimator.start();
     }
 
 
