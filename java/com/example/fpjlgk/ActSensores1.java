@@ -1,6 +1,10 @@
 package com.example.fpjlgk;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -8,6 +12,7 @@ import android.hardware.SensorManager;
 
 import android.os.Bundle;
 
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,9 +67,9 @@ public class ActSensores1 extends AppCompatActivity {
                     }
 
                     // Actualizar los TextView con los valores acumulados
-                    xValue.setText(String.format("%.2f°", orientationAngles[0]));
-                    yValue.setText(String.format("%.2f°", orientationAngles[1]));
-                    zValue.setText(String.format("%.2f°", orientationAngles[2]));
+                    xValue.setText("Eje X: "+String.format("%.2f°", orientationAngles[0]));
+                    yValue.setText("Eje Y: "+String.format("%.2f°", orientationAngles[1]));
+                    zValue.setText("Eje Z: "+String.format("%.2f°", orientationAngles[2]));
 
                     // Guardar el timestamp actual
                     lastTimestamp = event.timestamp;
@@ -76,6 +81,27 @@ public class ActSensores1 extends AppCompatActivity {
                 }
             };
         }
+        View layout = findViewById(R.id.layoutsensores);
+
+        // Crea un ObjectAnimator para animar el color de fondo
+        ObjectAnimator colorAnimator = ObjectAnimator.ofObject(
+                layout,                                // La vista a animar
+                "backgroundColor",                     // La propiedad a cambiar
+                new ArgbEvaluator(),                   // Interpolador para colores
+                //Color.RED,                             // Color inicial
+                Color.CYAN ,                            // Color intermedio
+                //Color.GREEN,                           // Color final
+                //Color.MAGENTA
+                Color.parseColor("#e9f542")
+        );
+
+        // Configura la duración y el comportamiento de la animación
+        colorAnimator.setDuration(20000);           // Duración de x segundos
+        colorAnimator.setRepeatCount(ValueAnimator.INFINITE); // Animación infinita
+        colorAnimator.setRepeatMode(ValueAnimator.REVERSE);   // Reversa al terminar
+
+        // Inicia la animación
+        colorAnimator.start();
     }
 
     @Override
