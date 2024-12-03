@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import java.util.List;
@@ -33,6 +34,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         return new ViewHolder(view);
     }
 
+    // GalleryAdapter.java
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String imagePath = imageList.get(position);
@@ -46,10 +48,17 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                 );
                 holder.imgThumbnail.setImageResource(resId);
 
+                // GalleryAdapter.java
                 holder.imgThumbnail.setOnClickListener(v -> {
                     Intent intent = new Intent(context, FullscreenImageActivity.class);
-                    intent.putExtra("resource_id", resId);
-                    activity.startActivityForResult(intent, ActGaleria1.REQUEST_DELETE_IMAGE);
+                    intent.putExtra("image_path", imagePath);
+
+                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            activity, holder.imgThumbnail, "image_transition");
+                    activity.startActivityForResult(intent, ActGaleria1.REQUEST_DELETE_IMAGE, options.toBundle());
+
+                    // Call openImage to animate the opening
+                    ((FullscreenImageActivity) context).openImage(holder.imgThumbnail);
                 });
             } else {
                 Glide.with(context).load(imagePath).placeholder(R.drawable.image2).into(holder.imgThumbnail);
@@ -57,7 +66,10 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                 holder.imgThumbnail.setOnClickListener(v -> {
                     Intent intent = new Intent(context, FullscreenImageActivity.class);
                     intent.putExtra("image_path", imagePath);
-                    activity.startActivityForResult(intent, ActGaleria1.REQUEST_DELETE_IMAGE);
+
+                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            activity, holder.imgThumbnail, "image_transition");
+                    activity.startActivityForResult(intent, ActGaleria1.REQUEST_DELETE_IMAGE, options.toBundle());
                 });
             }
 
@@ -86,4 +98,5 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
             imgThumbnail = itemView.findViewById(R.id.imgThumbnail);
         }
     }
+
 }

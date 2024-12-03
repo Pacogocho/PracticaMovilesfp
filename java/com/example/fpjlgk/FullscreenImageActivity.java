@@ -1,19 +1,22 @@
+
 package com.example.fpjlgk;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
+
+import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
 import java.io.File;
 
+// FullscreenImageActivity.java
 public class FullscreenImageActivity extends AppCompatActivity {
-
-    private static final String TAG = "FullscreenImageActivity";
     private String imagePath;
     private int resourceId;
 
@@ -22,55 +25,76 @@ public class FullscreenImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fullscreen_image);
 
-        PhotoView imageView = findViewById(R.id.fullscreenImage);
+        ImageView imageView = findViewById(R.id.fullscreen_image);
+        imagePath = getIntent().getStringExtra("image_path");
+        resourceId = getIntent().getIntExtra("resource_id", 0);
+
+        if (resourceId != 0) {
+            imageView.setImageResource(resourceId);
+        } else if (imagePath != null) {
+            Glide.with(this).load(imagePath).into(imageView);
+        }
+
+        openImage(imageView);
+
         Button btnDelete = findViewById(R.id.btnDelete);
+        btnDelete.setOnClickListener(v -> deleteImage());
+    }
 
-        try {
-            imagePath = getIntent().getStringExtra("image_path");
-            resourceId = getIntent().getIntExtra("resource_id", 0);
-            Log.d(TAG, "Image path: " + imagePath);
-            Log.d(TAG, "Resource ID: " + resourceId);
+    public void openImage(ImageView imageView) {
+        ScaleAnimation scaleAnimation = new ScaleAnimation(
+                0.0f, 1.0f, 0.0f, 1.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+        scaleAnimation.setDuration(300);
+        scaleAnimation.setFillAfter(true);
+        imageView.startAnimation(scaleAnimation);
+    }
 
-            if (resourceId != 0) {
-                imageView.setImageResource(resourceId);
-            } else if (imagePath != null) {
-                Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-                if (bitmap != null) {
-                    imageView.setImageBitmap(bitmap);
-                } else {
-                    Log.e(TAG, "Error al cargar el bitmap desde la ruta: " + imagePath);
-                    Toast.makeText(this, "Error al cargar la imagen", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Log.e(TAG, "La ruta de la imagen es nula");
-                Toast.makeText(this, "Error al cargar la imagen", Toast.LENGTH_SHORT).show();
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ImageView imageView = findViewById(R.id.fullscreen_image);
+        ScaleAnimation scaleAnimation = new ScaleAnimation(
+                1.0f, 0.0f, 1.0f, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+        scaleAnimation.setDuration(300);
+        scaleAnimation.setFillAfter(true);
+        imageView.startAnimation(scaleAnimation);
+        scaleAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                supportFinishAfterTransition();
             }
 
-            btnDelete.setOnClickListener(v -> {
-                try {
-                    if (resourceId != 0) {
-                        Toast.makeText(this, "Imagen predeterminada no puede ser eliminada", Toast.LENGTH_SHORT).show();
-                    } else if (imagePath != null) {
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+    }
+
+    private void deleteImage() {
+        ImageView imageView = findViewById(R.id.fullscreen_image);
+        imageView.animate()
+                .translationX(imageView.getWidth())
+                .setDuration(300)
+                .withEndAction(() -> {
+                    if (imagePath != null) {
                         File file = new File(imagePath);
                         if (file.exists() && file.delete()) {
                             Toast.makeText(this, "Imagen eliminada", Toast.LENGTH_SHORT).show();
                             Intent resultIntent = new Intent();
                             resultIntent.putExtra("deleted_image_path", imagePath);
                             setResult(RESULT_OK, resultIntent);
-                            finish(); // Cerrar la actividad después de la eliminación
                         } else {
-                            Log.e(TAG, "Error al eliminar el archivo o el archivo no existe");
                             Toast.makeText(this, "Error al eliminar la imagen", Toast.LENGTH_SHORT).show();
                         }
                     }
-                } catch (Exception e) {
-                    Log.e(TAG, "Error al eliminar la imagen", e);
-                    Toast.makeText(this, "Error al eliminar la imagen", Toast.LENGTH_SHORT).show();
-                }
-            });
-        } catch (Exception e) {
-            Log.e(TAG, "Error en onCreate", e);
-            Toast.makeText(this, "Ocurrió un error al cargar la imagen", Toast.LENGTH_SHORT).show();
-        }
+                    finish();
+                })
+                .start();
     }
 }
